@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export function Banner() {
   return (
-    <div className='relative'>
+    <div className='relative max-w-[20rem] mx-auto mt-2'>
       <p className='absolute top-[-0.5rem] left-[2rem] text-4xl font-black text-blue-800'>
         Quick
       </p>

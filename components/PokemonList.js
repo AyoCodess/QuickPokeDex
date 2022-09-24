@@ -1,18 +1,40 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-export function PokemonList({ defaultList }) {
+export function PokemonList({ defaultList, setOpenModal, setModalContent }) {
   console.log(defaultList);
   return (
-    <div className='flex flex-col gap-3 mt-6'>
+    <ul className='flex flex-col gap-3 mt-6'>
       {defaultList.map((pokemon, index) => {
         // name transformation
         let firstLetter = pokemon.name.split('')[0].toUpperCase();
         const formattedName = [...firstLetter, pokemon.name.slice(1)].join('');
         return (
-          <ul
+          <li
             key={index}
+            onClick={() => {
+              setOpenModal(true);
+              setModalContent(
+                <>
+                  <p className='flex justify-center text-2xl'>
+                    {formattedName}
+                  </p>
+                  <div className='flex justify-center items-center '>
+                    <img
+                      className='w-40'
+                      src={pokemon.imageFront}
+                      alt={pokemon.name}
+                    />
+                    <img
+                      className='w-40'
+                      src={pokemon.imageBack}
+                      alt={pokemon.name}
+                    />
+                  </div>
+                </>
+              );
+            }}
             className='flex items-center justify-between p-4 border rounded-lg border-gray-400 shadow'>
-            <li>
+            <div>
               <p className='flex flex-col  items-center'>
                 <h2 className='text-xl'>{formattedName} </h2>{' '}
                 <span className='italic'>{pokemon.type.join(', ')}</span>
@@ -29,7 +51,7 @@ export function PokemonList({ defaultList }) {
                   );
                 })}
               </p>
-            </li>
+            </div>
             {pokemon.id <= 151 && (
               <img
                 src={`/sprites/${pokemon.id}.svg`}
@@ -44,9 +66,9 @@ export function PokemonList({ defaultList }) {
                 alt={pokemon.name}
               />
             )}
-          </ul>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 }
