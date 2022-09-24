@@ -3,14 +3,13 @@
 import App from 'next/app';
 
 export default async function getPokemonList(req, res) {
-  let NoPokemonFetched = req.body.NoPokemonFetched;
   let errorMessage = '';
 
   try {
     // get Pokemon Names
     const response = await fetch(
       `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${
-        NoPokemonFetched || 151
+        req.query.total === '0' ? 151 : req.query.total
       }`
     );
 
@@ -38,11 +37,12 @@ export default async function getPokemonList(req, res) {
         const data = await response.json();
 
         return {
-          pokemonName,
+          name: pokemonName,
           id: data.id,
+          type: data.types.map((type) => type.type.name),
           stats: data.stats,
-          ImageFront: data.sprites.front_default,
-          ImageBack: data.sprites.back_default,
+          imageFront: data.sprites.front_default,
+          imageBack: data.sprites.back_default,
         };
       })
     );
