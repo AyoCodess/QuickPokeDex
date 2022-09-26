@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-export function PokemonList({ defaultList, setOpenModal, setModalContent }) {
-  console.log(defaultList);
+export function PokemonList({ pokemonList, setOpenModal, setModalContent }) {
   return (
     <ul className='flex flex-col gap-3 mt-6'>
-      {defaultList.map((pokemon, index) => {
+      {pokemonList.map((pokemon, index) => {
         // name transformation
         let firstLetter = pokemon.name.split('')[0].toUpperCase();
         const formattedName = [...firstLetter, pokemon.name.slice(1)].join('');
@@ -36,7 +35,9 @@ export function PokemonList({ defaultList, setOpenModal, setModalContent }) {
             className='flex items-center justify-between p-4 border rounded-lg border-gray-400 shadow'>
             <div>
               <p className='flex flex-col  items-center'>
-                <h2 className='text-xl'>{formattedName} </h2>{' '}
+                <h2 className='text-2xl text-blue-800 font-medium'>
+                  {formattedName}{' '}
+                </h2>{' '}
                 <span className='italic'>{pokemon.type.join(', ')}</span>
               </p>
               <p className='mt-3'>
