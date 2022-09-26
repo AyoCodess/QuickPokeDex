@@ -1,9 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
-export function PokemonList({ pokemonList, setOpenModal, setModalContent }) {
+export function PokemonListView({
+  pokemonListData,
+  setOpenModal,
+  setModalContent,
+}) {
   return (
-    <ul className='flex flex-col gap-3 mt-6'>
-      {pokemonList.map((pokemon, index) => {
+    <ul className='flex flex-col gap-3 mt-6 md:max-w-7xl sm:mx-auto sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+      {pokemonListData.map((pokemon, index) => {
         // name transformation
         let firstLetter = pokemon.name.split('')[0].toUpperCase();
         const formattedName = [...firstLetter, pokemon.name.slice(1)].join('');
@@ -32,15 +36,15 @@ export function PokemonList({ pokemonList, setOpenModal, setModalContent }) {
                 </>
               );
             }}
-            className='flex items-center justify-between p-4 border rounded-lg border-gray-400 shadow'>
+            className='flex items-center justify-between p-4 border rounded-lg  shadow-md'>
             <div>
-              <p className='flex flex-col  items-center'>
+              <section className='flex flex-col  items-center'>
                 <h2 className='text-2xl text-blue-800 font-medium'>
                   {formattedName}{' '}
                 </h2>{' '}
                 <span className='italic'>{pokemon.type.join(', ')}</span>
-              </p>
-              <p className='mt-3'>
+              </section>
+              <section className='mt-3'>
                 {pokemon.stats.map((stat, i) => {
                   return (
                     <ul key={i}>
@@ -51,7 +55,7 @@ export function PokemonList({ pokemonList, setOpenModal, setModalContent }) {
                     </ul>
                   );
                 })}
-              </p>
+              </section>
             </div>
             {pokemon.id <= 151 && (
               <img

@@ -1,9 +1,8 @@
-import getPokemonList from './api/getPokemon';
 import { useState, useEffect } from 'react';
 import {
   Banner,
   SearchInput,
-  PokemonList,
+  PokemonListView,
   Footer,
   Modal,
   LoadingSpinner,
@@ -12,8 +11,9 @@ import {
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [sort, setSort] = useState(false);
 
-  const [pokemonList, setPokemonList] = useState([]);
+  const [defaultList, setDefaultList] = useState([]);
 
   const [openModal, setOpenModal] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -26,10 +26,10 @@ export default function Home() {
       try {
         setError(false);
         setLoading(true);
-        let total = 155;
+        let total = 200;
         const response = await fetch(`/api/getPokemon?total=${total}`);
         const data = await response.json();
-        setPokemonList(data);
+        setDefaultList(data);
       } catch (err) {
         console.error(err);
         setError(true);
@@ -42,57 +42,81 @@ export default function Home() {
 
   return (
     <>
-      <div className=' h-max m-4 p-3 rounded-lg shadow-md border-2  border-gray-200'>
+      <div className='h-max m-4 p-3 rounded-lg shadow-md shadow-yellow-200 border-2  border-yellow-200'>
         <header>
           <Banner />
-          <SearchInput
-            pokemonList={pokemonList}
-            setFilteredListResults={setFilteredListResults}
-            setSearchInputTerm={setSearchInputTerm}
-            searchInputTerm={searchInputTerm}
-          />
+          {!loading && (
+            <SearchInput
+              defaultList={defaultList}
+              setDefaultList={setDefaultList}
+              filteredListResults={filteredListResults}
+              setFilteredListResults={setFilteredListResults}
+              setSearchInputTerm={setSearchInputTerm}
+              searchInputTerm={searchInputTerm}
+              setSort={setSort}
+            />
+          )}
         </header>
-        {searchInputTerm.length > 0 && filteredListResults.length === 0 && (
-          <main className='grid place-items-center mt-5 text-2xl  '>
+        <main>
+          {loading && <LoadingSpinner />}
+          {/* loads default list when no pokemon is found via search */}
+          {searchInputTerm.length > 0 && filteredListResults.length === 0 && (
             <section>
-              <p className='text-center px-4 text-blue-800'>
+              <p className='text-center text-2xl px-4 text-blue-800'>
                 There are no pokemon matching your search.
               </p>
+              {
+                <PokemonListView
+                  pokemonListData={defaultList}
+                  setOpenModal={setOpenModal}
+                  setModalContent={setModalContent}
+                />
+              }
             </section>
-          </main>
-        )}
-
-        <main>
+          )}
+          {/* if api breaks during user experience or when app mounts */}
+          {error && (
+            <section className='grid place-items-center mb-5 '>
+              <p className='text-center px-4 text-2xl text-blue-800'>
+                Cannot get new pokemon data from server, please try again later.
+              </p>
+            </section>
+          )}
           <section>
-            {/* if api breaks during user experience or when app mounts */}
-            {error && (
-              <section className='grid place-items-center mb-5 text-2xl'>
-                <p className='text-center px-4 text-blue-800'>
-                  Cannot get new pokemon data from server, please try again
-                  later.
-                </p>
-              </section>
-            )}
             {/*default view when app mounts */}
-            {pokemonList && searchInputTerm.length < 1 && (
-              <PokemonList
-                pokemonList={pokemonList}
-                filteredListResults={filteredListResults}
+            {searchInputTerm.length < 1 && (
+              <PokemonListView
+                pokemonListData={
+                  filteredListResults.length > 0
+                    ? filteredListResults
+                    : defaultList
+                }
                 setOpenModal={setOpenModal}
                 setModalContent={setModalContent}
               />
             )}
 
             {/*pokemon filter when search box has at least 1 character */}
-            {searchInputTerm.length >= 1 && (
-              <PokemonList
-                pokemonList={filteredListResults}
-                filteredListResults={filteredListResults}
+            {searchInputTerm.length >= 1 && !sort && (
+              <PokemonListView
+                pokemonListData={
+                  filteredListResults.length < 1
+                    ? defaultList
+                    : filteredListResults
+                }
                 setOpenModal={setOpenModal}
                 setModalContent={setModalContent}
               />
             )}
-            {loading && <LoadingSpinner />}
+
+            {/*sorting via menu */}
+            {sort && (
+              <PokemonListView
+                pokemonListData={filteredListResults}
+                setOpenModal={setOpenModal}
+                setModalContent={setModalContent}
+              />
+            )}
           </section>
         </main>
         <Footer />

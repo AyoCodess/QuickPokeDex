@@ -50,7 +50,7 @@ export const Modal = ({ openModal, setOpenModal, modalContent }) => {
                           className='cursor-pointer h-6'
                           onClick={() => setOpenModal(false)}
                         />
-                        <h2 className=' w-full text-lg font-medium text-center '>
+                        <h2 className=' w-full text-lg font-medium mr-6 text-center '>
                           More Images
                         </h2>
                       </div>
