@@ -2,7 +2,7 @@
 
 ## All 5 steps have been completed.
 
-## Live Link: https://quickpokedex-ayocodes.netlify.app/
+### Live Link: https://quickpokedex-ayocodes.netlify.app/
 
 ## Extra features
 
